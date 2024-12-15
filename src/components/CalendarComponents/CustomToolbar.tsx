@@ -6,17 +6,15 @@ import { Button } from '../ui/button';
 import { DatePicker } from '../ui/datePicker';
 import { useEffect, useState } from 'react';
 
+type ViewTypes = "day" | "week" | "month" | "agenda";
+
 const CustomToolbar = (props: ToolbarProps) => {
     const [selectedDate, setSelectedDate] = useState<Date>();
+    const [view, setView] = useState<ViewTypes>('month');
 
-    const goToDayView = () => {
-        props.onView('day');
-    };
-    const goToWeekView = () => {
-        props.onView('week');
-    };
-    const goToMonthView = () => {
-        props.onView('month');
+    const handleViewChange = (view: ViewTypes) => {
+        props.onView(view);
+        setView(view);
     };
 
     const goToBack = () => {
@@ -35,32 +33,55 @@ const CustomToolbar = (props: ToolbarProps) => {
         props.onNavigate(Navigate.DATE, newDate);
     };
 
+    const renderDate = () => {
+        const date = props.date;
+        switch (view) {
+            case "day":
+                return moment(date).format('dddd, MMMM D');
+            case "week":
+                const isSameMonth = moment(date).isSame(moment(date).add(1, "week"), "month");
+                return moment(date).format("MMMM D") + ' - ' + moment(date).add(1, "week").format(`${isSameMonth ? "D" : "MMMM D"}`);
+            case "month":
+                return moment(date).format('MMMM YYYY');
+            case "agenda":
+                return moment(date).format('DD/MM/YYYY') + ' - ' + moment(date).add(1, "week").format('DD/MM/YYYY');
+            default:
+                return '';
+        }
+    }
+
     useEffect(() => {
         if (selectedDate) {
             goToSpecificDate(selectedDate);
         }
     }, [selectedDate]);
 
+
     return (
-        <div className='flex items-center justify-between mb-3'>
-            <h4 className='scroll-m-20 text-xl font-semibold tracking-tight'>{moment(props.date).format('DD MMMM YYYY')}</h4>
-            <div className='flex gap-5'>
-                <DatePicker setDate={setSelectedDate} date={selectedDate}/>
-                <div className='gap-1 flex'>
-                    <Button variant={'secondary'} onClick={goToBack}>&#8249;</Button>
-                    <Button onClick={goToToday}>today</Button>
-                    <Button variant={'secondary'} onClick={goToNext}>&#8250;</Button>
+        <div className='flex flex-col'>
+            <h4 className='text-center scroll-m-20 text-xl font-semibold tracking-tight'>
+                {renderDate()}
+            </h4>
+            <div className='flex items-center justify-between mb-3'>
+                <div className='flex flex-col md:flex-row gap-3'>
+                    <div className='gap-1 flex'>
+                        <Button variant={'secondary'} onClick={goToBack}>&#8249;</Button>
+                        <Button onClick={goToToday}>today</Button>
+                        <Button variant={'secondary'} onClick={goToNext}>&#8250;</Button>
+                    </div>
+                    <DatePicker setDate={setSelectedDate} date={selectedDate} />
                 </div>
-                <Tabs defaultValue="month" className="flex justify-end">
-                    <TabsList>
-                        <TabsTrigger value="month" onClick={goToMonthView}>month</TabsTrigger>
-                        <TabsTrigger value="week" onClick={goToWeekView}>week</TabsTrigger>
-                        <TabsTrigger value="day" onClick={goToDayView}>day</TabsTrigger>
-                    </TabsList>
-                </Tabs>
-                
-                {/* TODO */}
-                <Button>Add Event </Button>
+
+                <div className='flex flex-col md:flex-row gap-3'>
+                    <Tabs defaultValue="month">
+                        <TabsList>
+                            <TabsTrigger value="month" onClick={() => handleViewChange("month")}>month</TabsTrigger>
+                            <TabsTrigger value="week" onClick={() => handleViewChange("week")}>week</TabsTrigger>
+                            <TabsTrigger value="day" onClick={() => handleViewChange("day")}>day</TabsTrigger>
+                            <TabsTrigger value="agonda" onClick={() => handleViewChange("agenda")}>list</TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+                </div>
             </div>
         </div>
     );
