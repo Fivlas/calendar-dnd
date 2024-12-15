@@ -7,6 +7,8 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import CustomToolbar from "./CalendarComponents/CustomToolbar";
 import { events } from "@/data/EventsData";
 import CustomShowMore from "./CalendarComponents/CustomShowMore";
+import CustomTimeSlotWrapper from "./CalendarComponents/CustomEventWrapper";
+import CustomEventWrapper from "./CalendarComponents/CustomEventWrapper";
 
 const DnDCalendar = withDragAndDrop(Calendar);
 const localizer = momentLocalizer(moment);
@@ -93,7 +95,7 @@ const CalendarComponent = () => {
         components={{ 
             toolbar: CustomToolbar, 
             showMore: CustomShowMore,
-            // timeSlotWrapper: CustomTimeSlotWrapper
+            eventWrapper: CustomEventWrapper
           }}
         scrollToTime={new Date()}
         onSelectEvent={handleSelectEvent}
