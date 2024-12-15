@@ -6,6 +6,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css';
 import CustomToolbar from "./CalendarComponents/CustomToolbar";
 import { events } from "@/data/EventsData";
+import CustomShowMore from "./CalendarComponents/CustomShowMore";
 
 const DnDCalendar = withDragAndDrop(Calendar);
 const localizer = momentLocalizer(moment);
@@ -87,15 +88,19 @@ const CalendarComponent = () => {
       <DnDCalendar
         localizer={localizer}
         events={myEvents}
-        style={{ height: 500, width: "100%" }}
+        style={{ height: 700, width: "100%" }}
         className="px-6"
-        components={{ toolbar: CustomToolbar }}
+        components={{ 
+            toolbar: CustomToolbar, 
+            showMore: CustomShowMore,
+            // timeSlotWrapper: CustomTimeSlotWrapper
+          }}
         scrollToTime={new Date()}
-        enableAutoScroll={true}
         onSelectEvent={handleSelectEvent}
         onSelectSlot={handleSelectSlot}
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
+        enableAutoScroll
         popup
         resizable
         selectable
