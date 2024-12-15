@@ -6,7 +6,8 @@ const CustomEventWrapper = (props: EventWrapperProps & { children?: React.ReactN
     <ContextMenu>
       <ContextMenuTrigger>{props.children}</ContextMenuTrigger>
       <ContextMenuContent>
-        <ContextMenuItem className="px-2.5 md:px-2">Delete</ContextMenuItem>
+        {/* @ts-ignore */}
+        <ContextMenuItem className="px-2.5 md:px-2" onClick={() => console.log(props.event.id)}>Delete</ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
   );

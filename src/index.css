@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-@import 'react-big-calendar/lib/sass/styles';
-@import 'react-big-calendar/lib/addons/dragAndDrop/styles';
+/* @import 'react-big-calendar/lib/sass/styles';
+@import 'react-big-calendar/lib/addons/dragAndDrop/styles'; */
 
 @layer base {
   :root {
@@ -85,9 +85,9 @@
   }
 }
 
-.rbc-event {
+/* .rbc-event {
   @apply !bg-primary text-primary-foreground;
-}
+} */
 
 .rbc-today {
   @apply !bg-accent;
