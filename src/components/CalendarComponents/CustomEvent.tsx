@@ -2,8 +2,9 @@ import { EventProps } from 'react-big-calendar'
 
 const CustomEvent = (props : EventProps) => {
   return (
-    <div className='bg-red-700'>
-        CustomEvent
+    <div className='bg-primary'>
+      {/* @ts-ignore */}
+        {props.event.title}
     </div>
   )
 }

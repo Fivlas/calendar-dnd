@@ -12,6 +12,8 @@ import CustomShowMore from "./CalendarComponents/CustomShowMore";
 import CustomEventWrapper from "./CalendarComponents/CustomEventWrapper";
 import CustomEvent from "./CalendarComponents/CustomEvent";
 import "moment-timezone";
+import CustomDateCellWrapper from "./CalendarComponents/CustomDateCellWrapper";
+import AddEventModal from "./AddEventModal";
 
 const DnDCalendar = withDragAndDrop(Calendar);
 moment.tz.setDefault("Europe/Warsaw");
@@ -113,9 +115,10 @@ const CalendarComponent = () => {
 
     return (
         <div className="mt-3">
+            <AddEventModal/>
             <DnDCalendar
                 culture="pl-PL"
-                formats={{ timeGutterFormat: "H:mm"}}
+                formats={{ timeGutterFormat: "H:mm" }}
                 localizer={localizer}
                 events={myEvents}
                 style={{ height: 700, width: "100%" }}
@@ -125,6 +128,10 @@ const CalendarComponent = () => {
                     showMore: CustomShowMore,
                     eventWrapper: CustomEventWrapper,
                     event: CustomEvent,
+                    dateCellWrapper: CustomDateCellWrapper,
+                    // dateCellWrapper: CustomDateCellWrapper,
+                    //@ts-ignore
+                    // eventContainerWrapper: CustomDateCellWrapper,
                 }}
                 scrollToTime={new Date()}
                 onSelectEvent={handleSelectEvent}

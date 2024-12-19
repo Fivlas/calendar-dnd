@@ -4,7 +4,6 @@ import moment from 'moment';
 import { Separator } from '../ui/separator';
 
 const CustomShowMore = (props: ShowMoreProps) => {
-    console.log(props)
     return (
         <Popover>
             <PopoverTrigger>
