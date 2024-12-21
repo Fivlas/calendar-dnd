@@ -10,32 +10,32 @@ import {
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Copy } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DateTimePicker24h } from "./ui/dateAndTimePicker";
 
 type AddEventModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    modalData: any; // You can improve this with more specific types like EventData
+    modalData: any;
 };
 
 const AddEventModal = ({ isOpen, onClose, modalData }: AddEventModalProps) => {
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [selectedDate2, setSelectedDate2] = useState<Date | null>(null);
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+    const [selectedDate2, setSelectedDate2] = useState<Date | undefined>(undefined);
 
     useEffect(() => {
         if (modalData && modalData.value) {
             setSelectedDate(new Date(modalData.value));
+            console.log(modalData.value);
         }
     }, [modalData]);
 
-    const handleSubmit = () => {
+    const handleSubmit = useCallback(() => {
         if (selectedDate) {
             console.log("Event date:", selectedDate);
-            // Here you can implement your save logic, like saving the event data
             onClose();
         }
-    };
+    }, [selectedDate, selectedDate2]);
 
     return (
         <Dialog open={isOpen}>
@@ -50,12 +50,10 @@ const AddEventModal = ({ isOpen, onClose, modalData }: AddEventModalProps) => {
                     <div className="grid gap-2">
                         <Label htmlFor="date">Start Date</Label>
                         {/* Pass `selectedDate` as `date` and `setSelectedDate` as `setDate` */}
-                        {/* @ts-ignore */}
                         <DateTimePicker24h setDate={setSelectedDate} date={selectedDate} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="date">End Date</Label>
-                        {/* @ts-ignore */}
                         <DateTimePicker24h setDate={setSelectedDate2} date={selectedDate2} />
                     </div>
                     <Button type="button" size="sm" onClick={handleSubmit}>
@@ -63,13 +61,13 @@ const AddEventModal = ({ isOpen, onClose, modalData }: AddEventModalProps) => {
                         <Copy />
                     </Button>
                 </div>
-                <DialogFooter className="sm:justify-start">
+                {/* <DialogFooter className="sm:justify-start">
                     <DialogClose asChild onClick={onClose}>
                         <Button type="button" variant="secondary">
                             Close
                         </Button>
                     </DialogClose>
-                </DialogFooter>
+                </DialogFooter> */}
             </DialogContent>
         </Dialog>
     );

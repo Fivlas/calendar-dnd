@@ -85,9 +85,9 @@
   }
 }
 
-/* .rbc-event {
-  @apply !bg-primary text-primary-foreground;
-} */
+.rbc-event {
+  @apply !bg-primary text-primary-foreground z-10;
+}
 
 .rbc-today {
   @apply !bg-accent;

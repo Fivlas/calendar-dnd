@@ -13,8 +13,6 @@ import CustomEventWrapper from "./CalendarComponents/CustomEventWrapper";
 import CustomEvent from "./CalendarComponents/CustomEvent";
 import "moment-timezone";
 import CustomDateCellWrapper from "./CalendarComponents/CustomDateCellWrapper";
-import AddEventModal from "./AddEventModal";
-import { useStore } from "@/store/openModal";
 
 const DnDCalendar = withDragAndDrop(Calendar);
 moment.tz.setDefault("Europe/Warsaw");
@@ -26,9 +24,8 @@ moment.locale("pl-PL", {
 const localizer = momentLocalizer(moment);
 
 const CalendarComponent = () => {
+
     const [myEvents, setEvents] = useState<EventData[]>(events);
-    //@ts-ignore
-    const { isOpenCreateModal, toggleCreateModal, modalData } = useStore();
 
     const moveEvent = useCallback(
         ({
@@ -118,7 +115,6 @@ const CalendarComponent = () => {
 
     return (
         <div className="mt-3">
-            <AddEventModal isOpen={isOpenCreateModal} onClose={() => toggleCreateModal()} modalData={modalData}/>
             <DnDCalendar
                 culture="pl-PL"
                 formats={{ timeGutterFormat: "H:mm" }}
@@ -132,7 +128,6 @@ const CalendarComponent = () => {
                     eventWrapper: CustomEventWrapper,
                     // event: CustomEvent,
                     dateCellWrapper: CustomDateCellWrapper,
-                    // dateCellWrapper: CustomDateCellWrapper,
                     //@ts-ignore
                     // eventContainerWrapper: CustomDateCellWrapper,
                 }}
