@@ -10,7 +10,7 @@ import CustomToolbar from "./CalendarComponents/CustomToolbar";
 import { events } from "@/data/EventsData";
 import CustomShowMore from "./CalendarComponents/CustomShowMore";
 import CustomEventWrapper from "./CalendarComponents/CustomEventWrapper";
-import CustomEvent from "./CalendarComponents/CustomEvent";
+// import CustomEvent from "./CalendarComponents/CustomEvent";
 import "moment-timezone";
 import CustomDateCellWrapper from "./CalendarComponents/CustomDateCellWrapper";
 
