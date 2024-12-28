@@ -96,3 +96,11 @@
 .rbc-off-range-bg { 
   @apply !bg-muted;
 }
+
+.rbc-row-content {
+  @apply !static !z-0;
+}
+
+.rbc-addons-dnd-row-body {
+  @apply !static;
+}

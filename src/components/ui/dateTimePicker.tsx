@@ -12,13 +12,19 @@ import {
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { CalendarIcon } from "lucide-react";
 import { DayPicker } from "react-day-picker";
+import { DialogContext } from "./dialog";
 
 type DateTimePickerProps = React.ComponentProps<typeof DayPicker> & {
     date: Date | undefined;
     setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-}
+    container?: any;
+    modal?: boolean;
+};
 
-export function DatetimePicker({ date, setDate} : DateTimePickerProps) {
+export function DatetimePicker({ date, setDate, modal }: DateTimePickerProps) {
+    const context = modal ? React.useContext(DialogContext) : null;
+    const dialogRef = context?.dialogRef;
+
     const [isOpen, setIsOpen] = React.useState(false);
 
     const hours = Array.from({ length: 24 }, (_, i) => i);
@@ -41,7 +47,7 @@ export function DatetimePicker({ date, setDate} : DateTimePickerProps) {
     };
 
     return (
-        <Popover open={isOpen} onOpenChange={setIsOpen} modal>
+        <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"
@@ -58,7 +64,7 @@ export function DatetimePicker({ date, setDate} : DateTimePickerProps) {
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
+            <PopoverContent className="w-auto p-0" container={dialogRef?.current}>
                 <div className="sm:flex">
                     <Calendar
                         mode="single"
