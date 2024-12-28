@@ -86,7 +86,7 @@
 }
 
 .rbc-event {
-  @apply !bg-primary text-primary-foreground z-10;
+  @apply !bg-primary text-primary-foreground !z-10 relative;
 }
 
 .rbc-today {
@@ -94,13 +94,23 @@
 }
 
 .rbc-off-range-bg { 
-  @apply !bg-muted;
+  @apply !bg-stone-300;
+  @apply !bg-opacity-40;
+}
+
+.rbc-today {
+  @apply !bg-stone-300;
+  @apply !bg-opacity-40;
 }
 
 .rbc-row-content {
-  @apply !static !z-0;
+  @apply !static !z-auto;
 }
 
 .rbc-addons-dnd-row-body {
   @apply !static;
+}
+
+.rbc-button-link {
+  @apply !select-none;
 }

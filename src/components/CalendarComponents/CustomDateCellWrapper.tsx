@@ -65,50 +65,6 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
 
 
     return (
-        // <Dialog open={open} onOpenChange={setOpen}>
-        //     <ContextMenu>
-        //         <ContextMenuTrigger
-        //             className={`pointer-events-auto ${
-        //                 props.children.props.className
-        //             } ${shouldHaveZIndex ? "" : ""}`}
-        //         >
-        //             {props.children}
-        //         </ContextMenuTrigger>
-        //         <ContextMenuContent>
-        //             <DialogTrigger>
-        //                 <ContextMenuItem className="px-2.5 md:px-2">
-        //                     <span>Add Event</span>
-        //                 </ContextMenuItem>
-        //             </DialogTrigger>
-        //         </ContextMenuContent>
-        //     </ContextMenu>
-        //     <DialogContent>
-        //         <DialogHeader>
-        //             <DialogTitle>Add Event</DialogTitle>
-        //             <DialogDescription>
-        //                 Make sure to add this event to your calendar to stay
-        //                 organized and never miss it.
-        //             </DialogDescription>
-        //         </DialogHeader>
-        //         <Label>Start Date</Label>
-        //         <DatetimePicker setDate={setSelectedDate} date={selectedDate} />
-        //         <Label>End Date</Label>
-        //         <DatetimePicker
-        //             setDate={setSelectedDate2}
-        //             date={selectedDate2}
-        //         />
-        //         <Label>Event Title</Label>
-        //         <Input
-        //             placeholder="Sylwester u Zduniaka"
-        //             value={title}
-        //             onChange={(e) => setTitle(e.currentTarget.value)}
-        //         />
-        //             <Button type="submit" onClick={clickHandler}>
-        //                 Add
-        //             </Button>
-        //     </DialogContent>
-        // </Dialog>
-
         <Dialog variants={customVariants} transition={customTransition}>
             <ContextMenu>
                 <ContextMenuTrigger
