@@ -58,7 +58,7 @@ const CustomEventWrapper = (props: EventWrapperProps & { children?: React.ReactN
     };
 
     return (
-        <Dialog variants={customVariants} transition={customTransition} open={isDialogOpen}>
+        <Dialog variants={customVariants} transition={customTransition} open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <ContextMenu>
                 <ContextMenuTrigger>
                     {props.children}
