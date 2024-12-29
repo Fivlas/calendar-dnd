@@ -86,7 +86,7 @@
 }
 
 .rbc-event {
-  @apply !bg-primary text-primary-foreground !z-10 relative;
+  @apply !bg-primary !text-primary-foreground !z-10 relative;
 }
 
 .rbc-today {

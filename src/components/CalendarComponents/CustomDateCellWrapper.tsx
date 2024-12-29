@@ -6,10 +6,8 @@ import {
     ContextMenuTrigger,
 } from "../ui/context-menu";
 import { Button } from "../ui/button";
-import { Label } from "../ui/label";
 import { DatetimePicker } from "../ui/dateTimePicker";
 import { Input } from "../ui/input";
-import { Transition, Variants } from "motion/react";
 import {
     Dialog,
     DialogContent,
@@ -18,59 +16,54 @@ import {
     DialogTrigger,
 } from "../ui/dialog";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { addEventModalSchema } from "@/schemas/addEventModalSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "../ui/form";
 
 const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(
         new Date(props.value)
     );
-    const [selectedDate2, setSelectedDate2] = useState<Date | undefined>(
-        undefined
-    );
-    const [title, setTitle] = useState<string>("");
+    const [selectedDate2, setSelectedDate2] = useState<Date | undefined>(undefined);
 
+    // Hook form for handling input validation and submission
+    const form = useForm<z.infer<typeof addEventModalSchema>>({
+        resolver: zodResolver(addEventModalSchema),
+        defaultValues: {
+            startDate: selectedDate,
+            endDate: undefined,
+            title: "",
+        },
+    });
+
+    // Submission handler
+    const onSubmit = (values: z.infer<typeof addEventModalSchema>) => {
+        console.log("Event Submitted:", values);
+        // Handle event creation logic here
+    };
+
+    // Excluded class names for conditional styling
     const excludedClassNames = ["rbc-off-range-bg", "rbc-today"];
     const shouldHaveZIndex = !excludedClassNames.some((className) =>
         (props.children.props.className || "").includes(className)
     );
 
-    const customVariants: Variants = {
-        initial: {
-            opacity: 0,
-            scale: 0.95,
-            y: 40,
-        },
-        animate: {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-        },
-        exit: {
-            opacity: 0,
-            scale: 0.95,
-            y: 40,
-        },
-    };
-
-    const customTransition: Transition = {
-        type: "spring",
-        bounce: 0,
-        duration: 0.25,
-    };
-
-    const clickHandler = () => {
-        console.log("Start Date:", selectedDate);
-        console.log("End Date:", selectedDate2);
-        console.log("Event Title:", title);
-    };
-
-
     return (
-        <Dialog variants={customVariants} transition={customTransition}>
+        <Dialog>
             <ContextMenu>
                 <ContextMenuTrigger
                     className={`pointer-events-auto ${
                         props.children.props.className
-                    } ${shouldHaveZIndex ? "" : ""}`}
+                    } ${shouldHaveZIndex ? "z-10" : ""}`}
                 >
                     {props.children}
                 </ContextMenuTrigger>
@@ -87,34 +80,73 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                     Add Event
                 </DialogTitle>
                 <DialogDescription className="text-zinc-600 dark:text-zinc-400">
-                    Make sure to add this event to your calendar to stay
-                    organized and never miss it.
+                    Make sure to add this event to your calendar to stay organized and never miss it.
                 </DialogDescription>
-                <div className="mt-6 flex flex-col space-y-4">
-                    <Label>Start Date</Label>
-                    <DatetimePicker
-                        setDate={setSelectedDate}
-                        date={selectedDate}
-                        modal
-                    />
+                <Form {...form}>
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="mt-6 flex flex-col space-y-4"
+                    >
+                        {/* Start Date Field */}
+                        <FormField
+                            control={form.control}
+                            name="startDate"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Start Date</FormLabel>
+                                    <FormControl>
+                                        <DatetimePicker
+                                            {...field}
+                                            modal
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                    <Label>End Date</Label>
-                    <DatetimePicker
-                        setDate={setSelectedDate2}
-                        date={selectedDate2}
-                        modal
-                    />
+                        {/* End Date Field */}
+                        <FormField
+                            control={form.control}
+                            name="endDate"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>End Date</FormLabel>
+                                    <FormControl>
+                                        <DatetimePicker
+                                            {...field}
+                                            modal
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                    <Label>Event Title</Label>
-                    <Input
-                        placeholder="Sylwester u Zduniaka"
-                        value={title}
-                        onChange={(e) => setTitle(e.currentTarget.value)}
-                    />
-                    <Button type="submit" onClick={clickHandler}>
-                        Add
-                    </Button>
-                </div>
+                        {/* Event Title Field */}
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Event Title</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Enter event title"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* Submit Button */}
+                        <Button type="submit" className="mt-4">
+                            Add Event
+                        </Button>
+                    </form>
+                </Form>
             </DialogContent>
         </Dialog>
     );

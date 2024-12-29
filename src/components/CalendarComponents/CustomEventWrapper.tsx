@@ -14,34 +14,12 @@ import {
     DialogTrigger,
 } from "../ui/dialog";
 import { Button } from "../ui/button";
-import { Transition, Variants } from "motion/react";
+import { customTransition, customVariants } from "@/lib/utils";
 
-const CustomEventWrapper = (props: EventWrapperProps & { children?: React.ReactNode }) => {
+const CustomEventWrapper = (
+    props: EventWrapperProps & { children?: React.ReactNode }
+) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    const customVariants: Variants = {
-      initial: {
-          opacity: 0,
-          scale: 0.95,
-          y: 40,
-      },
-      animate: {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-      },
-      exit: {
-          opacity: 0,
-          scale: 0.95,
-          y: 40,
-      },
-  };
-
-  const customTransition: Transition = {
-      type: "spring",
-      bounce: 0,
-      duration: 0.25,
-  };
 
     const handleDeleteClick = () => {
         setIsDialogOpen(true);
@@ -58,14 +36,20 @@ const CustomEventWrapper = (props: EventWrapperProps & { children?: React.ReactN
     };
 
     return (
-        <Dialog variants={customVariants} transition={customTransition} open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <Dialog
+            variants={customVariants}
+            transition={customTransition}
+            open={isDialogOpen}
+            onOpenChange={setIsDialogOpen}
+        >
             <ContextMenu>
-                <ContextMenuTrigger>
-                    {props.children}
-                </ContextMenuTrigger>
+                <ContextMenuTrigger>{props.children}</ContextMenuTrigger>
                 <ContextMenuContent>
                     <DialogTrigger>
-                        <ContextMenuItem className="w-32" onClick={handleDeleteClick}>
+                        <ContextMenuItem
+                            className="w-32"
+                            onClick={handleDeleteClick}
+                        >
                             <span>Delete</span>
                         </ContextMenuItem>
                     </DialogTrigger>
@@ -76,11 +60,20 @@ const CustomEventWrapper = (props: EventWrapperProps & { children?: React.ReactN
                     Delete Event
                 </DialogTitle>
                 <DialogDescription className="text-zinc-600 dark:text-zinc-400">
-                    Are you sure you want to delete <span className="font-bold">{props.event.title}</span> event?
+                    Are you sure you want to delete{" "}
+                    <span className="font-bold">{props.event.title}</span>{" "}
+                    event?
                 </DialogDescription>
                 <div className="mt-2 flex justify-end gap-2">
-                  <Button variant={"outline"} onClick={handleCancel}>Cancel</Button>
-                  <Button variant={"destructive"} onClick={handleConfirmDelete}>Delete</Button>
+                    <Button variant={"outline"} onClick={handleCancel}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant={"destructive"}
+                        onClick={handleConfirmDelete}
+                    >
+                        Delete
+                    </Button>
                 </div>
             </DialogContent>
         </Dialog>
