@@ -27,7 +27,7 @@ export function DatetimePicker({ date, setDate, modal }: DateTimePickerProps) {
 
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const hours = Array.from({ length: 24 }, (_, i) => i);
+    const hours = Array.from({ length: 24 }, (_, i) => i).reverse();
     const handleDateSelect = (selectedDate: Date | undefined) => {
         if (selectedDate) {
             setDate(selectedDate);
