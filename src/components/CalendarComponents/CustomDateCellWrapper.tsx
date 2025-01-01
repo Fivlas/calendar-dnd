@@ -15,7 +15,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "../ui/dialog";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { addEventModalSchema } from "@/schemas/addEventModalSchema";
@@ -28,14 +27,16 @@ import {
     FormLabel,
     FormMessage,
 } from "../ui/form";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useEventsStoreActions } from "@/hooks/useEventsStoreActions";
 
 const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-        new Date(props.value)
-    );
-    const [selectedDate2, setSelectedDate2] = useState<Date | undefined>(undefined);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const { addEvent } = useEventsStoreActions();
 
-    // Hook form for handling input validation and submission
+    const selectedDate = new Date(props.value);
+
     const form = useForm<z.infer<typeof addEventModalSchema>>({
         resolver: zodResolver(addEventModalSchema),
         defaultValues: {
@@ -45,20 +46,34 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
         },
     });
 
-    // Submission handler
     const onSubmit = (values: z.infer<typeof addEventModalSchema>) => {
-        console.log("Event Submitted:", values);
-        // Handle event creation logic here
+        try {
+            const { startDate, endDate, title } = values;
+
+            const event: EventData = {
+                id: crypto.randomUUID(),
+                title,
+                start: startDate,
+                end: endDate,
+            };
+
+            addEvent(event);
+            toast.success("Event added successfully!");
+        } catch (error) {
+            toast.error("An error occurred while adding the event");
+            console.error(error);
+        } finally {
+            setIsDialogOpen(false);
+        }
     };
 
-    // Excluded class names for conditional styling
     const excludedClassNames = ["rbc-off-range-bg", "rbc-today"];
     const shouldHaveZIndex = !excludedClassNames.some((className) =>
         (props.children.props.className || "").includes(className)
     );
 
     return (
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <ContextMenu>
                 <ContextMenuTrigger
                     className={`pointer-events-auto ${
@@ -80,14 +95,14 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                     Add Event
                 </DialogTitle>
                 <DialogDescription className="text-zinc-600 dark:text-zinc-400">
-                    Make sure to add this event to your calendar to stay organized and never miss it.
+                    Make sure to add this event to your calendar to stay
+                    organized and never miss it.
                 </DialogDescription>
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="mt-6 flex flex-col space-y-4"
                     >
-                        {/* Start Date Field */}
                         <FormField
                             control={form.control}
                             name="startDate"
@@ -95,17 +110,13 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                                 <FormItem>
                                     <FormLabel>Start Date</FormLabel>
                                     <FormControl>
-                                        <DatetimePicker
-                                            {...field}
-                                            modal
-                                        />
+                                        <DatetimePicker {...field} modal />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
 
-                        {/* End Date Field */}
                         <FormField
                             control={form.control}
                             name="endDate"
@@ -113,17 +124,13 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                                 <FormItem>
                                     <FormLabel>End Date</FormLabel>
                                     <FormControl>
-                                        <DatetimePicker
-                                            {...field}
-                                            modal
-                                        />
+                                        <DatetimePicker {...field} modal />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
 
-                        {/* Event Title Field */}
                         <FormField
                             control={form.control}
                             name="title"
@@ -132,7 +139,7 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                                     <FormLabel>Event Title</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Enter event title"
+                                            placeholder="Event title"
                                             {...field}
                                         />
                                     </FormControl>
@@ -141,7 +148,6 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                             )}
                         />
 
-                        {/* Submit Button */}
                         <Button type="submit" className="mt-4">
                             Add Event
                         </Button>

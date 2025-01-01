@@ -11,7 +11,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "./ui/dialog";
-import { Transition, Variants } from "motion/react";
+import { customTransition, customVariants } from "@/lib/utils";
 
 type AddEventModalProps = {
     isOpen: boolean;
@@ -41,29 +41,29 @@ const AddEventModal = ({ isOpen, onClose, modalData }: AddEventModalProps) => {
         }
     }, [selectedDate, selectedDate2]);
 
-    const customVariants: Variants = {
-        initial: {
-            opacity: 0,
-            scale: 0.95,
-            y: 40,
-        },
-        animate: {
-            opacity: 1,
-            scale: 1,
-            y: 0,
-        },
-        exit: {
-            opacity: 0,
-            scale: 0.95,
-            y: 40,
-        },
-    };
+    // const customVariants: Variants = {
+    //     initial: {
+    //         opacity: 0,
+    //         scale: 0.95,
+    //         y: 40,
+    //     },
+    //     animate: {
+    //         opacity: 1,
+    //         scale: 1,
+    //         y: 0,
+    //     },
+    //     exit: {
+    //         opacity: 0,
+    //         scale: 0.95,
+    //         y: 40,
+    //     },
+    // };
 
-    const customTransition: Transition = {
-        type: "spring",
-        bounce: 0,
-        duration: 0.25,
-    };
+    // const customTransition: Transition = {
+    //     type: "spring",
+    //     bounce: 0,
+    //     duration: 0.25,
+    // };
 
     // <Dialog open={isOpen}>
     //     <DialogContent className="sm:max-w-md">
