@@ -20,7 +20,7 @@ type DateTimePickerProps = React.ComponentProps<typeof DayPicker> & {
 };
 
 export const DatetimePicker = React.forwardRef<HTMLButtonElement, DateTimePickerProps>(
-    ({ value, onChange, modal, ...props }, ref) => {
+    ({ value, onChange, modal }, ref) => {
         const context = modal ? React.useContext(DialogContext) : null;
         const dialogRef = context?.dialogRef;
 
