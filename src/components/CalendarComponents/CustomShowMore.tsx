@@ -7,7 +7,7 @@ const CustomShowMore = (props: ShowMoreProps) => {
     return (
         <Popover>
             <PopoverTrigger>
-                <div className='relative rbc-show-more !text-primary'>+{props.count} more</div>
+                <div className='relative rbc-show-more !text-primary !z-10'>+{props.count} more</div>
             </PopoverTrigger>
             <PopoverContent>
                 {moment(props.slotDate).format("D MMMM YYYY")}

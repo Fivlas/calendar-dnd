@@ -1,5 +1,6 @@
 make tooltip responsive
-add logic to add event
+add logic to add event [+]
 today needs other styling +
 custom event styling
-make context menu on every row (bug when event is on row it shows default context menu)
+make context menu on every row (bug when event is on row it shows default context menu) [+]
+clicking event dont work

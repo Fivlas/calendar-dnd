@@ -1,5 +1,5 @@
-import { useCallback } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
+import { useCallback } from "react";
 import moment from "moment";
 import withDragAndDrop, {
     EventInteractionArgs,
@@ -106,10 +106,10 @@ const CalendarComponent = () => {
                     toolbar: CustomToolbar,
                     showMore: CustomShowMore,
                     eventWrapper: CustomEventWrapper,
-                    // event: CustomEvent,
                     dateCellWrapper: CustomDateCellWrapper,
                     //@ts-ignore
                     // eventContainerWrapper: CustomDateCellWrapper,
+                    // event: CustomEvent,
                 }}
                 scrollToTime={new Date()}
                 onSelectEvent={handleSelectEvent}

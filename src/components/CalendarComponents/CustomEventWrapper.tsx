@@ -36,15 +36,20 @@ const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
         setIsDialogOpen(false);
     };
 
+    // Ensure the event wrapper can be clicked, and the context menu only shows on right-click
     return (
         <Dialog
             variants={customVariants}
             transition={customTransition}
             open={isDialogOpen}
             onOpenChange={setIsDialogOpen}
+            
         >
             <ContextMenu>
-                <ContextMenuTrigger>{props.children}</ContextMenuTrigger>
+                <ContextMenuTrigger>
+                    {props.children}
+                </ContextMenuTrigger>
+
                 <ContextMenuContent>
                     <DialogTrigger>
                         <ContextMenuItem
@@ -56,6 +61,7 @@ const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
                     </DialogTrigger>
                 </ContextMenuContent>
             </ContextMenu>
+            
             <DialogContent className="w-full max-w-md bg-white p-6 dark:bg-zinc-900">
                 <DialogTitle className="text-zinc-900 dark:text-white">
                     Delete Event
