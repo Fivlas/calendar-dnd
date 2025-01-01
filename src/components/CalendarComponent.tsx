@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import withDragAndDrop, {
@@ -7,14 +7,15 @@ import withDragAndDrop, {
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import CustomToolbar from "./CalendarComponents/CustomToolbar";
-import { events } from "@/data/EventsData";
 import CustomShowMore from "./CalendarComponents/CustomShowMore";
 import CustomEventWrapper from "./CalendarComponents/CustomEventWrapper";
 // import CustomEvent from "./CalendarComponents/CustomEvent";
 import "moment-timezone";
 import CustomDateCellWrapper from "./CalendarComponents/CustomDateCellWrapper";
+import { useEvents } from "@/hooks/useEvents";
+import { useEventsStoreActions } from "@/hooks/useEventsStoreActions";
 
-const DnDCalendar = withDragAndDrop(Calendar);
+const DnDCalendar = withDragAndDrop<EventData, object>(Calendar);
 moment.tz.setDefault("Europe/Warsaw");
 moment.locale("pl-PL", {
     week: {
@@ -24,8 +25,8 @@ moment.locale("pl-PL", {
 const localizer = momentLocalizer(moment);
 
 const CalendarComponent = () => {
-
-    const [myEvents, setEvents] = useState<EventData[]>(events);
+    const events = useEvents();
+    const { addEvent } = useEventsStoreActions();
 
     const moveEvent = useCallback(
         ({
@@ -33,11 +34,12 @@ const CalendarComponent = () => {
             start,
             end,
             isAllDay: droppedOnAllDaySlot = false,
-        }: EventInteractionArgs<object>) => {
+        }: EventInteractionArgs<EventData>) => {
             const typedEvent = event as EventData;
 
             const { allDay } = typedEvent;
 
+            // Adjust the all-day property based on drop location
             if (!allDay && droppedOnAllDaySlot) {
                 typedEvent.allDay = true;
             }
@@ -45,51 +47,30 @@ const CalendarComponent = () => {
                 typedEvent.allDay = false;
             }
 
-            setEvents((prev) => {
-                const existing = prev.find((ev) => ev.id === typedEvent.id);
-                if (existing) {
-                    const filtered = prev.filter(
-                        (ev) => ev.id !== typedEvent.id
-                    );
-                    return [
-                        ...filtered,
-                        {
-                            ...existing,
-                            start: new Date(start),
-                            end: new Date(end),
-                            allDay: typedEvent.allDay,
-                        },
-                    ];
-                }
-                return prev;
-            });
+            // Update the event in the store
+            const updatedEvent: EventData = {
+                ...typedEvent,
+                start: new Date(start),
+                end: new Date(end),
+                allDay: typedEvent.allDay,
+            };
+            addEvent(updatedEvent);
         },
-        [setEvents]
+        [addEvent]
     );
 
     const resizeEvent = useCallback(
-        ({ event, start, end }: EventInteractionArgs<object>) => {
+        ({ event, start, end }: EventInteractionArgs<EventData>) => {
             const typedEvent = event as EventData;
 
-            setEvents((prev) => {
-                const existing = prev.find((ev) => ev.id === typedEvent.id);
-                if (existing) {
-                    const filtered = prev.filter(
-                        (ev) => ev.id !== typedEvent.id
-                    );
-                    return [
-                        ...filtered,
-                        {
-                            ...existing,
-                            start: new Date(start),
-                            end: new Date(end),
-                        },
-                    ];
-                }
-                return prev;
-            });
+            const updatedEvent: EventData = {
+                ...typedEvent,
+                start: new Date(start),
+                end: new Date(end),
+            };
+            addEvent(updatedEvent);
         },
-        [setEvents]
+        [addEvent]
     );
 
     const handleSelectSlot = useCallback(
@@ -97,20 +78,19 @@ const CalendarComponent = () => {
             const title = window.prompt("New Event Name");
             if (title) {
                 const newEvent: EventData = {
-                    id: new Date().getTime(),
+                    id: crypto.randomUUID(),
                     start,
                     end,
                     title,
                 };
-                setEvents((prev) => [...prev, newEvent]);
+                addEvent(newEvent);
             }
         },
-        [setEvents]
+        [addEvent]
     );
 
-    const handleSelectEvent = useCallback((event: object) => {
-        const typedEvent = event as EventData;
-        window.alert(typedEvent.title);
+    const handleSelectEvent = useCallback((event: EventData) => {
+        window.alert(event.title);
     }, []);
 
     return (
@@ -119,7 +99,7 @@ const CalendarComponent = () => {
                 culture="pl-PL"
                 formats={{ timeGutterFormat: "H:mm" }}
                 localizer={localizer}
-                events={myEvents}
+                events={events}
                 style={{ height: 700, width: "100%" }}
                 className="px-6"
                 components={{

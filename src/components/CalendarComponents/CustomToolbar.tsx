@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 type ViewTypes = "day" | "week" | "month" | "agenda";
 
-const CustomToolbar = (props: ToolbarProps) => {
+const CustomToolbar: React.FC<ToolbarProps<EventData, object>> = (props) => {
     const [selectedDate, setSelectedDate] = useState<Date>();
     const [view, setView] = useState<ViewTypes>('month');
 
@@ -48,7 +48,7 @@ const CustomToolbar = (props: ToolbarProps) => {
             default:
                 return '';
         }
-    }
+    };
 
     useEffect(() => {
         if (selectedDate) {

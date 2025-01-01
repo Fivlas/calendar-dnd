@@ -1,5 +1,5 @@
 import { EventWrapperProps } from "react-big-calendar";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import {
     ContextMenu,
     ContextMenuContent,
@@ -16,9 +16,11 @@ import {
 import { Button } from "../ui/button";
 import { customTransition, customVariants } from "@/lib/utils";
 
-const CustomEventWrapper = (
-    props: EventWrapperProps & { children?: React.ReactNode }
-) => {
+interface CustomEventWrapperProps extends EventWrapperProps<EventData> {
+    children?: ReactNode;
+}
+
+const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleDeleteClick = () => {
@@ -30,7 +32,6 @@ const CustomEventWrapper = (
     };
 
     const handleConfirmDelete = () => {
-        //@ts-ignore
         console.log(`Deleting event with ID: ${props.event.id}`);
         setIsDialogOpen(false);
     };
