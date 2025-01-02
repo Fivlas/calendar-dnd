@@ -58,13 +58,13 @@ const CustomToolbar: React.FC<ToolbarProps<EventData, object>> = (props) => {
 
 
     return (
-        <div className='flex flex-col'>
+        <div className='flex flex-col gap-2 md:gap-0'>
             <h4 className='text-center scroll-m-20 text-xl font-semibold tracking-tight'>
                 {renderDate()}
             </h4>
-            <div className='flex items-center justify-between mb-3'>
+            <div className='flex md:flex-row flex-col items-center md:justify-between mb-3 gap-2 md:gap-0'>
                 <div className='flex flex-col md:flex-row gap-3'>
-                    <div className='gap-1 flex'>
+                    <div className='gap-1 flex justify-center'>
                         <Button variant={'secondary'} onClick={goToBack}>&#8249;</Button>
                         <Button onClick={goToToday}>today</Button>
                         <Button variant={'secondary'} onClick={goToNext}>&#8250;</Button>

@@ -101,7 +101,7 @@ const CalendarComponent = () => {
                 localizer={localizer}
                 events={events}
                 style={{ height: 700, width: "100%" }}
-                className="px-6"
+                className="md:px-6"
                 components={{
                     toolbar: CustomToolbar,
                     showMore: CustomShowMore,
