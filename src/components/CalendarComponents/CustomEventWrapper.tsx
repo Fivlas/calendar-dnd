@@ -15,6 +15,8 @@ import {
 } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { customTransition, customVariants } from "@/lib/utils";
+import { useEventsStoreActions } from "@/hooks/useEventsStoreActions";
+import { toast } from "sonner";
 
 interface CustomEventWrapperProps extends EventWrapperProps<EventData> {
     children?: ReactNode;
@@ -22,6 +24,7 @@ interface CustomEventWrapperProps extends EventWrapperProps<EventData> {
 
 const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const { deleteEvent } = useEventsStoreActions();
 
     const handleDeleteClick = () => {
         setIsDialogOpen(true);
@@ -32,8 +35,9 @@ const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
     };
 
     const handleConfirmDelete = () => {
-        console.log(`Deleting event with ID: ${props.event.id}`);
+        deleteEvent(props.event.id);
         setIsDialogOpen(false);
+        toast.error("Event has been deleted!");
     };
 
     // Ensure the event wrapper can be clicked, and the context menu only shows on right-click
@@ -72,7 +76,7 @@ const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
                     event?
                 </DialogDescription>
                 <div className="mt-2 flex justify-end gap-2">
-                    <Button variant={"outline"} onClick={handleCancel}>
+                    <Button variant={"ghost"} onClick={handleCancel}>
                         Cancel
                     </Button>
                     <Button

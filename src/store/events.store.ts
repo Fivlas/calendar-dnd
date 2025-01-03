@@ -8,6 +8,7 @@ interface EventsStore {
 
 interface EventsStoreActions {
     addEvent: (event: EventData) => void;
+    deleteEvent: (eventId: string) => void;
 }
 
 export const useEventsStore = create<EventsStore>((set) => ({
@@ -27,5 +28,11 @@ export const useEventsStore = create<EventsStore>((set) => ({
                 }
             });
         },
+        deleteEvent: (eventId: string) => {
+            set((state) => {
+                const updatedEvents = state.events.filter((e) => e.id !== eventId);
+                return { events: updatedEvents };
+            });
+        }
     },
 }));
