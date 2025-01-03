@@ -18,7 +18,7 @@ import { customTransition, customVariants } from "@/lib/utils";
 import { useEventsStoreActions } from "@/hooks/useEventsStoreActions";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
-import { editEventModalSchema } from "@/schemas/addEventModalSchema";
+import { editEventModalSchema } from "@/schemas/editEventModalSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
