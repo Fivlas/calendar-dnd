@@ -1,5 +1,5 @@
-import { useEventsStore } from "@/store/events.store";
+import { EventsStoreActions, useEventsStore } from "@/store/events.store";
 
-export const useEventsStoreActions = () => {
+export const useEventsStoreActions = () : EventsStoreActions => {
     return useEventsStore((state) => state.actions);
 };

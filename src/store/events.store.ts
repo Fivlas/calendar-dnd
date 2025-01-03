@@ -6,7 +6,7 @@ interface EventsStore {
     actions: EventsStoreActions;
 }
 
-interface EventsStoreActions {
+export interface EventsStoreActions {
     addEvent: (event: EventData) => void;
     deleteEvent: (eventId: string) => void;
     updateEvent: (event: EventData) => void;
