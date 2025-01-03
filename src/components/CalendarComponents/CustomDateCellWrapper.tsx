@@ -6,7 +6,6 @@ import {
     ContextMenuTrigger,
 } from "../ui/context-menu";
 import { Button } from "../ui/button";
-import { DatetimePicker } from "../ui/dateTimePicker";
 import { Input } from "../ui/input";
 import {
     Dialog,
@@ -30,12 +29,15 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { useEventsStoreActions } from "@/hooks/useEventsStoreActions";
+import { DateTimePicker24h } from "../ui/DateTimePicker24h";
 
 const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const { addEvent } = useEventsStoreActions();
 
-    const selectedDate = new Date(props.value);
+    // const selectedDate = new Date(props.value);
+    const selectedDate =
+        props.value instanceof Date ? new Date(props.value) : undefined;
 
     const form = useForm<z.infer<typeof addEventModalSchema>>({
         resolver: zodResolver(addEventModalSchema),
@@ -110,7 +112,19 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                                 <FormItem>
                                     <FormLabel>Start Date</FormLabel>
                                     <FormControl>
-                                        <DatetimePicker {...field} modal />
+                                        {/* <DatetimePicker {...field} modal /> */}
+                                        <DateTimePicker24h
+                                            modal
+                                            date={field.value}
+                                            setDate={(value) => {
+                                                if (value instanceof Date) {
+                                                    form.setValue(
+                                                        "startDate",
+                                                        value
+                                                    );
+                                                }
+                                            }}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -124,7 +138,19 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                                 <FormItem>
                                     <FormLabel>End Date</FormLabel>
                                     <FormControl>
-                                        <DatetimePicker {...field} modal />
+                                        {/* <DatetimePicker {...field} modal /> */}
+                                        <DateTimePicker24h
+                                            modal
+                                            date={field.value}
+                                            setDate={(value) => {
+                                                if (value instanceof Date) {
+                                                    form.setValue(
+                                                        "endDate",
+                                                        value
+                                                    );
+                                                }
+                                            }}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

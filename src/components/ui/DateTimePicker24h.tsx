@@ -11,17 +11,23 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { CalendarIcon } from "lucide-react";
-import { DayPicker } from "react-day-picker";
+import { DialogContext } from "./dialog";
 
-type DateTimePicker24hProps = React.ComponentProps<typeof DayPicker> & {
+type DateTimePicker24hProps = {
     date: Date | undefined;
     setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-}
+    modal?: boolean;
+};
 
-export function DateTimePicker24h({ date, setDate } : DateTimePicker24hProps) {
+export const DateTimePicker24h = React.forwardRef<HTMLButtonElement, DateTimePicker24hProps>(
+    ({ date, setDate, modal = false }, ref) => {
+    const context = modal ? React.useContext(DialogContext) : null;
+    const dialogRef = context?.dialogRef;
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const hours = Array.from({ length: 24 }, (_, i) => i);
+    const hours = Array.from({ length: 24 }, (_, i) => i); // Array of 24 hours (0-23)
+    const minutes = Array.from({ length: 12 }, (_, i) => i * 5); // Array of minutes in 5-minute intervals
+
     const handleDateSelect = (selectedDate: Date | undefined) => {
         if (selectedDate) {
             setDate(selectedDate);
@@ -29,12 +35,12 @@ export function DateTimePicker24h({ date, setDate } : DateTimePicker24hProps) {
     };
 
     const handleTimeChange = (type: "hour" | "minute", value: string) => {
-        if (date) {
+        if (date && !isNaN(date.getTime())) {
             const newDate = new Date(date);
             if (type === "hour") {
-                newDate.setHours(parseInt(value));
+                newDate.setHours(parseInt(value, 10));
             } else if (type === "minute") {
-                newDate.setMinutes(parseInt(value));
+                newDate.setMinutes(parseInt(value, 10));
             }
             setDate(newDate);
         }
@@ -44,6 +50,7 @@ export function DateTimePicker24h({ date, setDate } : DateTimePicker24hProps) {
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
                 <Button
+                    ref={ref}
                     variant="outline"
                     className={cn(
                         "w-full justify-start text-left font-normal",
@@ -51,14 +58,14 @@ export function DateTimePicker24h({ date, setDate } : DateTimePicker24hProps) {
                     )}
                 >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? (
-                        format(date, "MM/dd/yyyy hh:mm")
+                    {date && !isNaN(date.getTime()) ? (
+                        format(date, "MM/dd/yyyy HH:mm") // Display date and time
                     ) : (
-                        <span>MM/DD/YYYY hh:mm</span>
+                        <span>MM/DD/YYYY HH:mm</span>
                     )}
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
+            <PopoverContent className="w-auto p-0" container={dialogRef?.current}>
                 <div className="sm:flex">
                     <Calendar
                         mode="single"
@@ -86,7 +93,7 @@ export function DateTimePicker24h({ date, setDate } : DateTimePicker24hProps) {
                                             )
                                         }
                                     >
-                                        {hour}
+                                        {hour.toString().padStart(2, "0")}
                                     </Button>
                                 ))}
                             </div>
@@ -97,10 +104,7 @@ export function DateTimePicker24h({ date, setDate } : DateTimePicker24hProps) {
                         </ScrollArea>
                         <ScrollArea className="w-64 sm:w-auto">
                             <div className="flex sm:flex-col p-2">
-                                {Array.from(
-                                    { length: 12 },
-                                    (_, i) => i * 5
-                                ).map((minute) => (
+                                {minutes.map((minute) => (
                                     <Button
                                         key={minute}
                                         size="icon"
@@ -131,4 +135,4 @@ export function DateTimePicker24h({ date, setDate } : DateTimePicker24hProps) {
             </PopoverContent>
         </Popover>
     );
-}
+});

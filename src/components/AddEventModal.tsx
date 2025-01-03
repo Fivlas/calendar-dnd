@@ -2,7 +2,7 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Copy } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import { DateTimePicker24h } from "./ui/dateAndTimePicker";
+import { DateTimePicker24h } from "./ui/DateTimePicker24h";
 import {
     Dialog,
     DialogClose,
@@ -20,12 +20,8 @@ type AddEventModalProps = {
 };
 
 const AddEventModal = ({ isOpen, onClose, modalData }: AddEventModalProps) => {
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-        undefined
-    );
-    const [selectedDate2, setSelectedDate2] = useState<Date | undefined>(
-        undefined
-    );
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+    const [selectedDate2, setSelectedDate2] = useState<Date | undefined>();
 
     useEffect(() => {
         if (modalData && modalData.value) {
@@ -33,6 +29,17 @@ const AddEventModal = ({ isOpen, onClose, modalData }: AddEventModalProps) => {
             console.log(modalData.value);
         }
     }, [modalData]);
+
+    // useEffect(() => {
+    //     if (modalData && modalData.value) {
+    //         const parsedDate = new Date(modalData.value);
+    //         if (!isNaN(parsedDate.getTime())) {
+    //             setSelectedDate(parsedDate);
+    //         } else {
+    //             console.error("Invalid date provided in modalData.value");
+    //         }
+    //     }
+    // }, [modalData]);
 
     const handleSubmit = useCallback(() => {
         if (selectedDate) {
