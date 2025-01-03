@@ -112,7 +112,6 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                                 <FormItem>
                                     <FormLabel>Start Date</FormLabel>
                                     <FormControl>
-                                        {/* <DatetimePicker {...field} modal /> */}
                                         <DateTimePicker24h
                                             modal
                                             date={field.value}
@@ -138,7 +137,6 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                                 <FormItem>
                                     <FormLabel>End Date</FormLabel>
                                     <FormControl>
-                                        {/* <DatetimePicker {...field} modal /> */}
                                         <DateTimePicker24h
                                             modal
                                             date={field.value}
