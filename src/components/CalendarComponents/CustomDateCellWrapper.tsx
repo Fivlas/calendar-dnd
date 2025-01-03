@@ -36,8 +36,7 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
     const { addEvent } = useEventsStoreActions();
 
     // const selectedDate = new Date(props.value);
-    const selectedDate =
-        props.value instanceof Date ? new Date(props.value) : undefined;
+    const selectedDate = props.value instanceof Date ? new Date(props.value) : undefined;
 
     const form = useForm<z.infer<typeof addEventModalSchema>>({
         resolver: zodResolver(addEventModalSchema),
@@ -103,8 +102,25 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="mt-6 flex flex-col space-y-4"
+                        className="mt-4 flex flex-col space-y-4"
                     >
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Event Title</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="Event title"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <FormField
                             control={form.control}
                             name="startDate"
@@ -148,23 +164,6 @@ const CustomDateCellWrapper = (props: DateCellWrapperProps) => {
                                                     );
                                                 }
                                             }}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="title"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Event Title</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            placeholder="Event title"
-                                            {...field}
                                         />
                                     </FormControl>
                                     <FormMessage />

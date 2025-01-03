@@ -17,6 +17,19 @@ import { Input } from "../ui/input";
 import { customTransition, customVariants } from "@/lib/utils";
 import { useEventsStoreActions } from "@/hooks/useEventsStoreActions";
 import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { editEventModalSchema } from "@/schemas/addEventModalSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "../ui/form";
+import { DateTimePicker24h } from "../ui/DateTimePicker24h";
 
 interface CustomEventWrapperProps extends EventWrapperProps<EventData> {
     children?: ReactNode;
@@ -25,10 +38,17 @@ interface CustomEventWrapperProps extends EventWrapperProps<EventData> {
 const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(props.event.title);
 
-    const { deleteEvent } = useEventsStoreActions();
-    // const { deleteEvent, updateEvent } = useEventsStoreActions();
+    const { deleteEvent, updateEvent } = useEventsStoreActions();
+
+    const form = useForm<z.infer<typeof editEventModalSchema>>({
+        resolver: zodResolver(editEventModalSchema),
+        defaultValues: {
+            startDate: props.event.start,
+            endDate: props.event.end,
+            title: props.event.title,
+        },
+    });
 
     const handleDeleteClick = () => {
         setIsDeleteDialogOpen(true);
@@ -48,32 +68,36 @@ const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
         toast.error("Event has been deleted!");
     };
 
-    const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedTitle(e.target.value);
-    };
-
     const handleCancelEdit = () => {
         setIsEditDialogOpen(false);
-        setEditedTitle(props.event.title); // Reset to original title
     };
 
-    const handleConfirmEdit = () => {
-        if (editedTitle.trim() === "") {
-            toast.error("Title cannot be empty!");
-            return;
+    const onSubmitEditEvent = (
+        values: z.infer<typeof editEventModalSchema>
+    ) => {
+        try {
+            const editedEvent: EventData = {
+                id: props.event.id,
+                start: values.startDate || props.event.start,
+                end: values.endDate || props.event.end,
+                title: values.title || props.event.title,
+            };
+
+            updateEvent(editedEvent);
+            toast.success("Event has been updated!");
+        } catch (error) {
+            toast.error("An error occurred while updating the event");
+            console.error(error);
+        } finally {
+            setIsEditDialogOpen(false);
         }
-        // updateEvent({ ...props.event, title: editedTitle });
-        setIsEditDialogOpen(false);
-        toast.success("Event has been updated!");
     };
 
     return (
         <>
             {/* Context Menu */}
             <ContextMenu>
-                <ContextMenuTrigger>
-                    {props.children}
-                </ContextMenuTrigger>
+                <ContextMenuTrigger>{props.children}</ContextMenuTrigger>
 
                 <ContextMenuContent>
                     {/* Delete Context Menu Item */}
@@ -85,10 +109,7 @@ const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
                     </ContextMenuItem>
 
                     {/* Edit Context Menu Item */}
-                    <ContextMenuItem
-                        className="w-32"
-                        onClick={handleEditClick}
-                    >
+                    <ContextMenuItem className="w-32" onClick={handleEditClick}>
                         <span>Edit</span>
                     </ContextMenuItem>
                 </ContextMenuContent>
@@ -139,21 +160,89 @@ const CustomEventWrapper: React.FC<CustomEventWrapperProps> = (props) => {
                         Modify the title of{" "}
                         <span className="font-bold">{props.event.title}</span>.
                     </DialogDescription>
-                    <div className="mt-4">
-                        <Input
-                            value={editedTitle}
-                            onChange={handleEditChange}
-                            placeholder="Enter new event title"
-                        />
-                    </div>
-                    <div className="mt-4 flex justify-end gap-2">
-                        <Button variant={"ghost"} onClick={handleCancelEdit}>
-                            Cancel
-                        </Button>
-                        <Button variant={"default"} onClick={handleConfirmEdit}>
-                            Save
-                        </Button>
-                    </div>
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmitEditEvent)}
+                            className="mt-4 flex flex-col space-y-4"
+                        >
+                            <FormField
+                                control={form.control}
+                                name="title"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Event Title</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="Event title"
+                                                {...field}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="startDate"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Start Date</FormLabel>
+                                        <FormControl>
+                                            <DateTimePicker24h
+                                                modal
+                                                date={field.value}
+                                                setDate={(value) => {
+                                                    if (value instanceof Date) {
+                                                        form.setValue(
+                                                            "startDate",
+                                                            value
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="endDate"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>End Date</FormLabel>
+                                        <FormControl>
+                                            <DateTimePicker24h
+                                                modal
+                                                date={field.value}
+                                                setDate={(value) => {
+                                                    if (value instanceof Date) {
+                                                        form.setValue(
+                                                            "endDate",
+                                                            value
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="mt-4 flex justify-end gap-2">
+                                <Button
+                                    variant={"ghost"}
+                                    onClick={handleCancelEdit}
+                                    type="button"
+                                >
+                                    Cancel
+                                </Button>
+                                <Button variant={"default"} type="submit">Save</Button>
+                            </div>
+                        </form>
+                    </Form>
                 </DialogContent>
             </Dialog>
         </>
